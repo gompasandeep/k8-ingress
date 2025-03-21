@@ -32,3 +32,27 @@ spec:
   - protocol: TCP
     port: 80 # service port
     targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app1
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:339713057882:certificate/cc414ff9-f12e-47e2-bb32-8508ed3571c1
+    alb.ingress.kubernetes.io/group.name: sancharlearning
+spec:
+  ingressClassName: alb
+  rules:
+  - host: "app1.sancharlearning.xyz"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: app1
+            port:
+              number: 80
